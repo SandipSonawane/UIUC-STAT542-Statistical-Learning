@@ -24,7 +24,8 @@ BW.onestep = function(x, para){
   #    w: initial estimate for mz-by-1 initial distribution over Z_1
   # Output the updated parameters after one iteration
   # We DO NOT update the initial distribution w
-  
+
+  # Initialization step
   T = length(x)
   mz = para$mz
   mx = para$mx
@@ -41,7 +42,6 @@ BW.onestep = function(x, para){
   ## for t=1:T-1, i=1:mz, j=1:mz, 
   ## which are stored in an array, myGamma
   
-  
   #######################################
   
   # M-step for parameter A
@@ -50,11 +50,29 @@ BW.onestep = function(x, para){
   ## A = ....
   #######################################
   
+  for(t in 1:T-1){
+    denominator = ((alp[t,] %*% A) * B[,x[t+1]]) %*% matrix(beta[t+1,]) 
+    for(s in 1:mz){
+      numerator = alp[t,s] * A[s,] * B[,x[t+1]] * beta[t+1,]
+      myGamma[s,,t]=numerator/as.vector(denominator)
+    }
+  }
+  
+  myGamma.all.t = rowSums(myGamma, dims = 2)
+  A = myGamma.all.t/rowSums(myGamma.all.t)
+  
   # M-step for parameter B
   #######################################
   ## YOUR CODE: 
   ## B = ....
   #######################################
+  
+  gamma = apply(myGamma, c(1, 3), sum)  
+  gamma = cbind(gamma, colSums(myGamma[, , T-1]))
+  for(l in 1:mx){
+    B[, l] = rowSums(gamma[, which(x==l)])
+  }
+  B = B/rowSums(B)
   
   para$A = A
   para$B = B
@@ -120,26 +138,49 @@ myViterbi = function(x, para){
   log.w = log(w)
   log.B = log(B)
   
+  prev = matrix(0, T-1, mz)
   # Compute delta (in log-scale)
-  delta = matrix(0, T, mz) 
+  delta = matrix(0, mz, T) 
   # fill in the first row of delta
-  delta[1, ] = log.w + log.B[, x[1]]
+  delta[, 1] = log.w + log.B[, x[1]]
   
   #######################################
   ## YOUR CODE: 
   ## Recursively compute the remaining rows of delta
   #######################################
+  for(t in 2:T){
+    for(s in 1:mz) {
+      probs = delta[, t - 1] + log.A[, s] + log.B[s, x[t]]
+      prev[t - 1, s] = which.max(probs)
+      delta[s, t] = max(probs)
+    }
+  }
+  
   
   # Compute the most prob sequence Z
   Z = rep(0, T)
   # start with the last entry of Z
-  Z[T] = which.max(delta[T, ])
+  last_state=which.max(delta[,ncol(delta)])
+  Z[1]=last_state
   
   #######################################
   ## YOUR CODE: 
   ## Recursively compute the remaining entries of Z
   #######################################
+
+  j=2
+  for(i in (T-1):1){
+    Z[j]=prev[i,last_state] 
+    last_state=prev[i,last_state] 
+    j=j+1
+  }
   
+  Z[which(Z==1)]='A'
+  Z[which(Z==2)]='B'
+  
+  Z=rev(Z)
+  
+
   return(Z)
 }
 
