@@ -36,7 +36,7 @@ preprocess.svd <- function(train, n.comp){
 
 mypredict = function(){
 
-  train_svd = preprocess.svd(train, 8)
+  train_svd = preprocess.svd(train, 6)
   start_date <- ymd("2011-03-01") %m+% months(2 * (t - 1))
   end_date <- ymd("2011-05-01") %m+% months(2 * (t - 1))
   test_current <- test %>%
@@ -49,7 +49,7 @@ mypredict = function(){
     filter(Date > start_last_year & Date < end_last_year) %>%
     mutate(Wk = ifelse(year(Date) == 2010, week(Date)-1, week(Date))) %>%
     rename(Weekly_Pred = Weekly_Sales) %>%
-    select(-Date, -IsHoliday)
+    select(-Date)
 
   test_current <- test_current %>%
     mutate(Wk = week(Date))
