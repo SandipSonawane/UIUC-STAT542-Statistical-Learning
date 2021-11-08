@@ -1,3 +1,6 @@
+rm(list = ls())
+ls()
+search()
 library(magrittr)
 library(tidyverse)
 library(dplyr)
@@ -35,8 +38,11 @@ preprocess.svd <- function(train, n.comp){
 }
 
 mypredict = function(){
-
-  train_svd = preprocess.svd(train, 6)
+  # train$Date <- ymd(train$Date)
+  # train$Date <- mdy(train$Date)
+  # train$Date <- as.Date(train$Date,format="%m/%d/%Y")
+  
+  train_svd = preprocess.svd(train, 8)
   start_date <- ymd("2011-03-01") %m+% months(2 * (t - 1))
   end_date <- ymd("2011-05-01") %m+% months(2 * (t - 1))
   test_current <- test %>%
@@ -59,7 +65,7 @@ mypredict = function(){
     test_pred <- NULL
 
     for(dept in test_depts){
-      train_dept_data <- train %>% filter(Dept == dept)
+      train_dept_data <- train_svd %>% filter(Dept == dept)
       test_dept_data <- test_current %>% filter(Dept == dept)
 
       # no need to consider stores that do not need prediction
@@ -162,7 +168,8 @@ mypredict = function(){
 ##### Evaluation #####
 # read in train / test dataframes
 train <- readr::read_csv('train_ini.csv')
-train$Date <- mdy(train$Date)
+# train$Date <- mdy(train$Date)
+train$Date <- as.Date(train$Date,format="%m/%d/%Y")
 test <- readr::read_csv('test.csv')
 
 # save weighted mean absolute error WMAE
