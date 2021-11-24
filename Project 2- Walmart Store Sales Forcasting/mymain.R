@@ -142,3 +142,10 @@ print(wae)
 mean(wae)
 
 
+
+
+
+
+
+
+
