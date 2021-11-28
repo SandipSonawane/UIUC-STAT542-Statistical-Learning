@@ -19,9 +19,6 @@ train <- read.table("train.tsv", stringsAsFactors = FALSE,
 #####################################
 # Train a binary classification model
 
-train = read.table("train.tsv",
-                   stringsAsFactors = FALSE,
-                   header = TRUE)
 train$review <- gsub('<.*?>', ' ', train$review)
 it_train = itoken(train$review,
                   preprocessor = tolower, 
