@@ -1,0 +1,20 @@
+Link to the web application
+System I: http://18.191.179.113:8000/movie_recommender/genre
+
+OR
+
+http://ec2-18-191-179-113.us-east-2.compute.amazonaws.com:8000/movie_recommender/genre
+
+System II: http://18.191.179.113:8000/movie_recommender/
+
+OR
+
+http://ec2-18-191-179-113.us-east-2.compute.amazonaws.com:8000/movie_recommender/
+
+Note: Please allow some time for the page to load.
+
+
+
+######## Source code for this app is not public. I have attached all the code in movie_recommender.zip file. Feel free to let me know if you want to access it through GitHub, I can give access to you.
+
+
