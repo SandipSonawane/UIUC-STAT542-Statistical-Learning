@@ -23,26 +23,26 @@ For this project, we essentially have only one dependent variable i.e. review. S
 This has been mentioned in the html markdown file. We selected 976 words in our vocabulary list based on lasso fit.
 
 ## 6. Modeling
-## 6.1 Benchmark Logistic Regression Model
+### 6.1 Benchmark Logistic Regression Model
 Our First Model was a vanilla logistic regression model without any ridge penalty. In order to arrive at the best model for each fold, we undertook 5 fold cross-validation to arrive at the optimal set of hyperparameters for each fold, then we utilized the list of best parameters to do the prediction for each fold. The parameter search space for each model was {"penalty": ['l1', 'l2'], 'C': [0.001, 0.01, 0.1, 1, 10, 100, 1000], "solver":['newton-cg', 'lbfgs']}. For all other parameters default values were used
 
-## 6.2 Extreme Gradient Boost (XGBoost)
+### 6.2 Extreme Gradient Boost (XGBoost)
 Following the Logistic Regression, we went ahead with XGBoosted trees. We followed a similar approach and did a 5 fold cross-validation for each fold to arrive at the optimal set of hyperparameters. We used the list of best parameters to do the prediction for each fold. The parameter search space for each GBR tree was {"min_child_weight":[4,5,6], "max_depth":[3,4,5]}. For all the other parameters we used default settings
-## 6.3 Logistic regression with ridge penalty
+### 6.3 Logistic regression with ridge penalty
 As per prof. Liang’s post on what we have tried, we created the vocabulary list by selecting non-zero features that are close to but less than 1000. Using these 976 words, we create a document term matrix for train and test sets. We then fit a logistic regression with ridge penalty and cross validation using glmnet. We created the probability of classification using min. Lambda by glmnet.
 
 ## 7. Results
-## 7.1 Benchmark Logistic Regression Model (Foldwise) [ordered from fold 1 to fold 5]: 
+### 7.1 Benchmark Logistic Regression Model (Foldwise) [ordered from fold 1 to fold 5]: 
 ```
 [0.89630, 0.89283, 0.89553, 0.89508, 0.89484] (Avg ROC): 0.89416
 Vocabulary Size = approximately 2000
 ```
-## 7.2 XGBoost classification Model (Foldwise) [ordered from fold 1 to fold 5]: 
+### 7.2 XGBoost classification Model (Foldwise) [ordered from fold 1 to fold 5]: 
 ```
 [0.8597, 0.8586, 0.8631, 0.8593, 0.8606] (Avg ROC): 0.86026
 Vocabulary Size = approximately 2000
 ```
-## 7.3 Linear Model (Foldwise) [ordered from fold 1 to fold 10]: 
+### 7.3 Linear Model (Foldwise) [ordered from fold 1 to fold 10]: 
 ```
 [ 0.9683942, 0.9681930, 0.9681220, 0.9690059, 0.9675730] (Avg ROC): 0.96824
 Vocabulary Size = approximately 976
@@ -62,9 +62,9 @@ Vocabulary Size = approximately 976
 ## 10. Error Analysis
 The below review is having positive sentiment, but our model has predicted it as negative sentiment with prob. 0.3408.
 The review: 
-```
+`
 “Now, Throw Momma from the Train was not a great comedy, but it is a load of fun and makes you laugh. The title may seem a little strange, but the entire movie isn't literally about that, although it is about something just as sinister.<br /><br />Danny De Vito basically wants to kill his overbearing mother, and fast forward a little bit, some random and funny events take place. The premise is quite funny, and the things that Billy Crystal and Danny De Vito get into were great. Some of the scenes seemed to not fit in for me, but this didn't make it a bad movie.<br /><br />For what it is, a wacky comedy, it pulls it off well and should be seen once just to say you saw it.”
-```
+`
 
 Words such as not great, isn’t literally, bad movie, not fit, are associated with negative sentiment, but the reviewer is actually using these to say the opposite. Because our model learns from all the reviews, this was misclassified. There are positive sentiment words too, but because of higher coefficient values for these negative sentences, the model predicts it as negative sentiment. We can also observe that reviews that got extreme negative probability of extreme positive probability are classified correctly.
 
