@@ -15,10 +15,6 @@ To measure the performance of regression models, weighted mean absolute error (W
 
 $$ WMAE = \frac{1}{\sum{w_i}} \sum_{i=1}^n w_i | y_i - \hat{y}_i |$$
 
-```math
-SE = \frac{\sigma}{\sqrt{n}}
-```
-
 n is the number of rows
 
 $\hat{y}_i$ is the predicted sales
