@@ -12,7 +12,13 @@ We have the below files to build and train models.
 
 ## 3. Evaluation metric
 To measure the performance of regression models, weighted mean absolute error (WMAE) is used as a performance metric.
+
 $$ WMAE = \frac{1}{\sum{w_i}} \sum_{i=1}^n w_i | y_i - \hat{y}_i |$$
+
+```math
+SE = \frac{\sigma}{\sqrt{n}}
+```
+
 n is the number of rows
 
 $\hat{y}_i$ is the predicted sales
